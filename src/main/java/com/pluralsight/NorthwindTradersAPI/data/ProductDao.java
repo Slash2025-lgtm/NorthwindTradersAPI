@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ProductDao {
     public List<Product> getAll();
-    public List<Product> get5thProduct();
-    public void add(int productID, String productName, int categoryID, double unitPrice);
+    public List<Product> getSpecificProduct(int productId);
+    public Product insert(Product product);
 }

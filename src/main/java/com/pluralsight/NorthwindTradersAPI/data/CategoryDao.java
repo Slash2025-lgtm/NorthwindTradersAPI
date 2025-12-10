@@ -8,5 +8,5 @@ import java.util.List;
 public interface CategoryDao {
     public List<Category> getAll();
     public List<Category> get1stCategory();
-    public void add(int categoryID, String companyName);
+    public Category insert(Category category);
 }

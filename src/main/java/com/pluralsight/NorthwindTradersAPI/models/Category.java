@@ -2,11 +2,18 @@ package com.pluralsight.NorthwindTradersAPI.models;
 
 public class Category {
     private int categoryId;
-    private String companyName;
+    private String categoryName;
 
-    public Category(int categoryId, String companyName) {
+    public Category(int categoryId, String categoryName) {
         this.categoryId = categoryId;
-        this.companyName = companyName;
+        this.categoryName = categoryName;
+    }
+
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Category() {
     }
 
     public int getCategoryId() {
@@ -17,18 +24,18 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     @Override
     public String toString() {
         return "--------- Product ---------" +
                 "\n\tProduct ID: " + categoryId +
-                "\n\tProduct Name: " + companyName + "\n";
+                "\n\tProduct Name: " + categoryName + "\n";
     }
 }

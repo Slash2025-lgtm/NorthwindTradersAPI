@@ -26,57 +26,60 @@ public class JdbcProductDao implements ProductDao {
     @Override
     public List<Product> getAll() {
         this.products.clear();
-        String query = "SELECT P.ProductID, P.ProductName, C.CategoryName, P.UnitPrice " +
+        String query = "SELECT P.ProductID, P.ProductName, P.CategoryId, C.CategoryName, P.UnitPrice " +
                 "FROM Products AS P JOIN " +
                 "Categories AS C ON (P.CategoryID = C.CategoryID) ";
 
-        try(Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet result = statement.executeQuery();
-            while(result.next()){
-                this.products.add(new Product(result.getInt(1), result.getString(2), result.getString(3),result.getDouble(4)));
+            while (result.next()) {
+                this.products.add(new Product(result.getInt(1), result.getString(2), result.getInt(3), result.getString(4), result.getDouble(5)));
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return this.products;
     }
 
     @Override
-    public List<Product> get5thProduct() {
+    public List<Product> getSpecificProduct(int productId) {
         this.products.clear();
-        String query = "SELECT P.ProductID, P.ProductName, C.CategoryName, P.UnitPrice " +
+        String query = "SELECT P.ProductID, P.ProductName, C.CategoryId, C.CategoryName, P.UnitPrice " +
                 "FROM Products AS P JOIN " +
                 "Categories AS C ON (P.CategoryID = C.CategoryID) " +
-                "WHERE P.ProductID = 5";
-
-        try(Connection connection = dataSource.getConnection()){
+                "WHERE P.ProductID = ?";
+        try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, productId);
             ResultSet result = statement.executeQuery();
-            while(result.next()){
-                this.products.add(new Product(result.getInt(1), result.getString(2), result.getString(3),result.getDouble(4)));
+            while (result.next()) {
+                this.products.add(new Product(result.getInt(1), result.getString(2), result.getInt(3), result.getString(4), result.getDouble(5)));
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return this.products;
     }
 
     @Override
-    public void add(int productID, String productName, int categoryID, double unitPrice) {
-        String query = "INSERT INTO Products (ProductID, ProductName, CategoryId, UnitPrice) VALUES (?, ?, ?, ?);";
+    public Product insert(Product product) {
+        String query = "INSERT INTO Products (ProductName, CategoryId, UnitPrice) VALUES (?, ?, ?);";
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, productID);
-                statement.setString(2, productName);
-                statement.setInt(3, categoryID);
-                statement.setDouble(4, unitPrice);
+                statement.setString(1, product.getProductName());
+                statement.setInt(2, product.getCategoryId());
+                statement.setDouble(3, product.getPrice());
+
+                int rowAffected = statement.executeUpdate();
+                if (rowAffected > 0) {
+                    System.out.println("Product added successfully");
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error adding product: " + e.getMessage());
             e.printStackTrace();
         }
+        return product;
     }
 }
